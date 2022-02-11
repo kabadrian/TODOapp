@@ -16,9 +16,13 @@ class ToDoItem extends Model
         'category'
     ];
 
-//    public function category(){
-//        return $this->hasOne(ToDoItemCategory::class);
-//    }
+    public function category(){
+        return $this->hasOne(Category::class);
+    }
+
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
 
 
 }
