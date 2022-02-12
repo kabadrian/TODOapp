@@ -106,9 +106,11 @@ class ToDoItemController extends Controller
      * @param  \App\Models\ToDoItem  $toDoItem
      * @return \Illuminate\Http\Response
      */
-    public function edit(ToDoItem $toDoItem)
+    public function edit($toDoItemID)
     {
-        //
+        $todo = ToDoItem::find($toDoItemID);
+        $categories = Category::all();
+        return view('to_do_items.edit', ['todo' => $todo, 'categories' => $categories]);
     }
 
     /**
@@ -118,9 +120,17 @@ class ToDoItemController extends Controller
      * @param  \App\Models\ToDoItem  $toDoItem
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ToDoItem $toDoItem)
+    public function update(Request $request, $toDoItemID)
     {
-        //
+        $todo = ToDoItem::find($toDoItemID);
+
+        $todo->title = $request->get('title');
+        $todo->description = $request->get('description');
+        $todo->category_id = $request->get('category');
+
+        $todo->save();
+
+        return redirect()->route('todos.show', $toDoItemID);
     }
 
     /**
