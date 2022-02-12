@@ -1,0 +1,8 @@
+form.todo-create > textarea, input{
+    border-radius: 10px;
+    padding: 0.2em 0.5em;
+}
+
+form.todo-create > textarea{
+    min-height: 2em;
+}

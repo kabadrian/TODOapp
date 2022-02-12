@@ -13,11 +13,12 @@ class ToDoItem extends Model
         'title',
         'description',
         'completed_at',
-        'category'
+        'category_id',
+        'user_id'
     ];
 
     public function category(){
-        return $this->hasOne(Category::class);
+        return $this->belongsTo(Category::class);
     }
 
     public function user(){

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\ToDoItem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ToDoItemController extends Controller
 {
@@ -14,7 +16,15 @@ class ToDoItemController extends Controller
      */
     public function index()
     {
-        //
+        $todos = null;
+        if(Auth::check()) {
+            $user_id = Auth::id();
+            if ($user_id) {
+                $todos = ToDoItem::where('user_id', $user_id)->get();
+            }
+        }
+
+        return view('to_do_items.index', ['todos' => $todos]);
     }
 
     /**
@@ -24,7 +34,8 @@ class ToDoItemController extends Controller
      */
     public function create()
     {
-        //
+        $categories = Category::all();
+        return view('to_do_items.create', ['categories' => $categories]);
     }
 
     /**
@@ -35,7 +46,21 @@ class ToDoItemController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $title = $request->get('title');
+        $description = $request->get('description');
+        $categoryID = $request->get('category');
+        $userID = Auth::id();
+
+        $todo = new ToDoItem([
+            'title' => $title,
+            'description' => $description,
+            'category_id' => $categoryID,
+            'user_id' => $userID
+        ]);
+
+        $todo->save();
+
+        return redirect()->route('todos.index');
     }
 
     /**
