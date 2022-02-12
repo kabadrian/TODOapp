@@ -22,5 +22,7 @@ Route::get('/dashboard', function () {
 })->middleware(['auth'])->name('dashboard');
 
 Route::resource('todos', ToDoItemController::class );
+Route::post('todos/{id}/completed', [ToDoItemController::class, 'completed'])->name('todos.completed');
+Route::post('todos/{id}/share', [ToDoItemController::class, 'share'])->name('todos.share');
 
 require __DIR__.'/auth.php';

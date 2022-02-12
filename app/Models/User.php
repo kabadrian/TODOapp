@@ -45,4 +45,8 @@ class User extends Authenticatable
     public function toDoItems(){
         return $this->hasMany(ToDoItem::class);
     }
+
+    public function sharedToDoItems(){
+        return $this->belongsToMany(ToDoItem::class);
+    }
 }

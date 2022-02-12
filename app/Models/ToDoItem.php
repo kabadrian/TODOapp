@@ -25,5 +25,9 @@ class ToDoItem extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function sharedUsers(){
+        return $this->belongsToMany(User::class);
+    }
+
 
 }

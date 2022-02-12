@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
     <div class="container-md">
-        <a class="navbar-brand" href="{{route('todos.index')}}}">Todo app</a>
+        <a class="navbar-brand" href="{{route('todos.index')}}">Todo app</a>
 
         <!-- If user is logged in display logout button, otherwise display login button-->
         @auth

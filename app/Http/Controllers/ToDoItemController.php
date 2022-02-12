@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\ToDoItem;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,17 +15,41 @@ class ToDoItemController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $todos = null;
         if(Auth::check()) {
             $user_id = Auth::id();
+            $user = User::find($user_id);
             if ($user_id) {
-                $todos = ToDoItem::where('user_id', $user_id)->get();
+                $category_id = $request->get('category');
+                $origin = $request->get('origin');
+
+                if($category_id) {
+                    $todos = ToDoItem::where('category_id', $category_id)->get();
+                }
+                elseif($origin){
+                    if($origin == "mine"){
+                        $todos = ToDoItem::where('user_id', Auth::id())->get();
+                    }
+                    elseif($origin == "shared"){
+                        $todos = $user->sharedToDoItems;
+                    }
+                }
+                else {
+                    $mine_todos = ToDoItem::where('user_id', $user_id)->get();
+                    $shared_todos = $user->sharedToDoItems;
+                    $todos = $mine_todos->merge($shared_todos);
+                }
             }
         }
+        else{
+//            todo session storage
+        }
+        $categories = Category::all();
+        $users = User::where('id', '!=', Auth::id())->get();
 
-        return view('to_do_items.index', ['todos' => $todos]);
+        return view('to_do_items.index', ['todos' => $todos, 'categories' => $categories, 'users' => $users]);
     }
 
     /**
@@ -69,9 +94,10 @@ class ToDoItemController extends Controller
      * @param  \App\Models\ToDoItem  $toDoItem
      * @return \Illuminate\Http\Response
      */
-    public function show(ToDoItem $toDoItem)
+    public function show($toDoID)
     {
-        //
+        $toDoItem = ToDoItem::find($toDoID);
+        return view('to_do_items.show', ['todo'=>$toDoItem]);
     }
 
     /**
@@ -106,5 +132,30 @@ class ToDoItemController extends Controller
     public function destroy(ToDoItem $toDoItem)
     {
         //
+    }
+
+    public function completed($todoID){
+        $todo = ToDoItem::find($todoID);
+//      If task was not yet completed set current time as completed_at
+        if(!$todo->completed_at) {
+            $todo->completed_at = now();
+        }
+//
+        else{
+            $todo->completed_at = null;
+        }
+        $todo->save();
+
+        return redirect()->route('todos.index');
+    }
+
+    public function share(Request $request, $toDoID){
+        $todo = ToDoItem::find($toDoID);
+
+        $user_id = $request->get('user');
+
+        $todo->sharedUsers()->attach($user_id);
+
+        return redirect()->route('todos.index');
     }
 }

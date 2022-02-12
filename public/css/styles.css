@@ -6,3 +6,18 @@ form.todo-create > textarea, input{
 form.todo-create > textarea{
     min-height: 2em;
 }
+
+td.done-cell {
+    text-align: center;
+}
+
+input[type="checkbox"]{
+    /*font-size: 2em;*/
+    width: 1.5em;
+    height: 1.5em;
+}
+
+input[type="radio"]{
+    width: 1.5em;
+    height: 1.5em;
+}
