@@ -7,6 +7,7 @@ use App\Models\ToDoItem;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class ToDoItemController extends Controller
 {
@@ -44,7 +45,8 @@ class ToDoItemController extends Controller
             }
         }
         else{
-//            todo session storage
+            $todos = ToDoItem::where('session_id', 'like', Session::getId())->get();
+
         }
         $categories = Category::all();
         $users = User::where('id', '!=', Auth::id())->get();
@@ -67,21 +69,27 @@ class ToDoItemController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
         $title = $request->get('title');
         $description = $request->get('description');
         $categoryID = $request->get('category');
-        $userID = Auth::id();
 
         $todo = new ToDoItem([
             'title' => $title,
             'description' => $description,
-            'category_id' => $categoryID,
-            'user_id' => $userID
+            'category_id' => $categoryID
         ]);
+
+        if(Auth::check()){
+            $todo->user_id = Auth::id();
+        }
+        else{
+            $todo->session_id = Session::getId();
+        }
+
 
         $todo->save();
 

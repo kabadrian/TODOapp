@@ -60,7 +60,11 @@
                             <div class="btn-group" role="group">
                                 <a class="btn btn-info me-2" href="{{route('todos.show', $todo->id)}}">Náhľad</a>
                                 <a class="btn btn-warning me-2" href="{{route('todos.edit', $todo->id)}}">Upraviť</a>
-                                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#shareTodoModal{{$todo->id}}">Zdieľať</button>
+
+                                <!-- User has to be logged in to share tasks-->
+                                @auth
+                                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#shareTodoModal{{$todo->id}}">Zdieľať</button>
+                                @endauth
                             </div>
                         </td>
                     </tr>
