@@ -22,32 +22,45 @@ class ToDoItemController extends Controller
         if(Auth::check()) {
             $user_id = Auth::id();
             $user = User::find($user_id);
+//           Get todos from database
             if ($user_id) {
-                $category_id = $request->get('category');
-                $origin = $request->get('origin');
+                $mine = $request->get('mine');
+                $shared = $request->get('shared');
 
-                if($category_id) {
-                    $todos = ToDoItem::where('category_id', $category_id)->get();
+//              If shared option is only checked, return shared todos
+                if($shared && !$mine){
+                    $todos = $user->sharedToDoItems;
                 }
-                elseif($origin){
-                    if($origin == "mine"){
-                        $todos = ToDoItem::where('user_id', Auth::id())->get();
-                    }
-                    elseif($origin == "shared"){
-                        $todos = $user->sharedToDoItems;
-                    }
+//              If mine option is only checked, return only mine todos
+                elseif(!$shared && $mine){
+                    $todos = ToDoItem::where('user_id', $user_id)->get();
                 }
-                else {
-                    $mine_todos = ToDoItem::where('user_id', $user_id)->get();
+//              Otherwise, return both, mine and shared
+                else{
                     $shared_todos = $user->sharedToDoItems;
+                    $mine_todos = ToDoItem::where('user_id', $user_id)->get();
                     $todos = $mine_todos->merge($shared_todos);
                 }
             }
         }
+//      User is not logged in, get todos by sessionID
         else{
             $todos = ToDoItem::where('session_id', 'like', Session::getId())->get();
-
         }
+
+        $category_id = $request->get('category');
+
+//      Category was selected, filter todos by category
+        if($category_id){
+            $todos = $todos->where('category_id', $category_id);
+        }
+
+//      Return only completed todos
+        if($request->get('completed')){
+            $todos = $todos->whereNotNull('completed_at');
+        }
+
+
         $categories = Category::all();
         $users = User::where('id', '!=', Auth::id())->get();
 

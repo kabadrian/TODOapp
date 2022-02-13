@@ -6,30 +6,30 @@
         <a href="{{route('todos.create')}}" class="btn btn-primary my-3">Pridať Todo</a>
     </div>
 
-    <div class="d-flex  my-2">
-        <div class="h4 me-2">Filtrovanie:</div>
-        <div class="dropdown">
-            <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown">
-                Všetky
-            </button>
-            <ul class="dropdown-menu">
-    {{--            <li>Kategória</li>--}}
+    <form class="row  my-2" method="GET" action="{{route('todos.index')}}">
+        <div class="h4 me-2 col-auto">Filtrovanie:</div>
+        <select class=" col-auto" aria-label="Kategória" name="category">
                 @foreach($categories as $category)
-                <li>
-                    <a class="dropdown-item" href="{{route('todos.index', ['category' => $category->id])}}">{{$category->name}}</a>
-                </li>
+                    <option class="dropdown-item" value="{{$category->id}}">{{$category->name}}</option>
                 @endforeach
-                <div class="dropdown-divider"></div>
-                <li>
-                    <a class="dropdown-item" href="{{route('todos.index', ['origin' => 'mine'])}}">Moje</a>
-                </li>
-                <div class="dropdown-divider"></div>
-                <li>
-                    <a class="dropdown-item" href="{{route('todos.index', ['origin' => 'shared'])}}">Zdieľané</a>
-                </li>
-            </ul>
+        </select>
+        <div class="col-auto d-flex">
+            <input class="mt-2 ms-1" type="checkbox" name="mine" id="mine">
+            <label class="mt-2 me-1 ms-2" for="mine">Moje</label>
         </div>
-    </div>
+        <div class="col-auto d-flex">
+            <input class="mt-2 ms-1" type="checkbox" name="shared" id="shared">
+            <label class="mt-2 me-1 ms-2" for="shared">Zdieľané</label>
+        </div>
+        <div class="col-auto d-flex">
+            <input class="mt-2 ms-1" type="checkbox" name="completed" id="completed">
+            <label class="mt-2 me-1 ms-2" for="completed">Dokončené</label>
+        </div>
+
+        <button type="submit" class="btn btn-secondary ms-3 col-auto">Filtrovať</button>
+
+
+    </form>
 
     <table class="table table-striped">
         <thead class="table-dark">
@@ -59,7 +59,13 @@
                         <td class="col-3">
                             <div class="btn-group" role="group">
                                 <a class="btn btn-info me-2" href="{{route('todos.show', $todo->id)}}">Náhľad</a>
-                                <a class="btn btn-warning me-2" href="{{route('todos.edit', $todo->id)}}">Upraviť</a>
+                                @auth
+                                    @can('update', $todo)
+                                        <a class="btn btn-warning me-2" href="{{route('todos.edit', $todo->id)}}">Upraviť</a>
+                                    @endcan
+                                @else
+                                    <a class="btn btn-warning me-2" href="{{route('todos.edit', $todo->id)}}">Upraviť</a>
+                                @endauth
 
                                 <!-- User has to be logged in to share tasks-->
                                 @auth
