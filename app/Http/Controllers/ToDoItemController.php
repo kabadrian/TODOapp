@@ -50,6 +50,9 @@ class ToDoItemController extends Controller
 
         $category_id = $request->get('category');
 
+//      If category id is 0, we want all categories
+        $category_id = $category_id == 0 ? null:$category_id;
+
 //      Category was selected, filter todos by category
         if($category_id){
             $todos = $todos->where('category_id', $category_id);

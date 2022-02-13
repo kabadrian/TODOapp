@@ -9,7 +9,10 @@
                 <button type="submit" class="btn btn-light">Odhlásiť</button>
             </form>
         @else
-            <a href="{{route('login')}}" class="btn btn-light">Prihlásiť</a>
+            <div>
+                <a href="{{route('register')}}" class="btn btn-light me-4">Registrácia</a>
+                <a href="{{route('login')}}" class="btn btn-light">Prihlásiť</a>
+            </div>
         @endauth
     </div>
 

@@ -9,8 +9,10 @@
     <form class="row  my-2" method="GET" action="{{route('todos.index')}}">
         <div class="h4 me-2 col-auto">Filtrovanie:</div>
         <select class=" col-auto" aria-label="Kategória" name="category">
+            <option value="0">všetky</option>
+
                 @foreach($categories as $category)
-                    <option class="dropdown-item" value="{{$category->id}}">{{$category->name}}</option>
+                    <option value="{{$category->id}}">{{$category->name}}</option>
                 @endforeach
         </select>
         <div class="col-auto d-flex">
