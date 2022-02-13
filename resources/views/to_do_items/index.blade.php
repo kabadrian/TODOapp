@@ -57,7 +57,11 @@
                             </form>
                         </td>
                         <td class="col-5">{{$todo->title}} </td>
-                        <td class="col-3">{{$todo->category->name}} </td>
+                        <td class="col-3">
+                            @isset($todo->category)
+                                {{$todo->category->name}}
+                            @endisset
+                        </td>
                         <td class="col-3">
                             <div class="d-flex justify-content-between">
                                 <div class="btn-group" role="group">

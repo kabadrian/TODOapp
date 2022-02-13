@@ -14,7 +14,7 @@ use App\Http\Controllers\ToDoItemController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('todos.index');
 });
 
 //Route::get('/dashboard', function () {

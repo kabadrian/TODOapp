@@ -28,6 +28,7 @@
 
         <div class="d-flex justify-content-between">
             <select id="category" name="category">
+                <option value=""></option>
                 @foreach($categories as $category)
                     <option value="{{$category->id}}"
                         @if($category==$todo->category)
