@@ -73,6 +73,11 @@ class ToDoItemController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+           'title' => 'required|min:2',
+           'description' => ' required'
+        ]);
+
         $title = $request->get('title');
         $description = $request->get('description');
         $categoryID = $request->get('category');
@@ -130,6 +135,11 @@ class ToDoItemController extends Controller
      */
     public function update(Request $request, $toDoItemID)
     {
+        $request->validate([
+            'title' => 'required|min:2',
+            'description' => ' required'
+        ]);
+
         $todo = ToDoItem::find($toDoItemID);
 
         $todo->title = $request->get('title');

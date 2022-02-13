@@ -1,6 +1,18 @@
 @extends('layouts.app')
 
 @section('content')
+
+    {{-- Display validation errors to user--}}
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <h1>Upravenie úlohy: {{$todo->title}}</h1>
 
     <form method="POST" class="todo-create" action="{{route('todos.update', $todo->id)}}" class="col-12">

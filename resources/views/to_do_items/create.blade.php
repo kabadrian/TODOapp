@@ -1,8 +1,20 @@
 @extends('layouts.app')
 
 @section('content')
+    {{-- Display validation errors to user--}}
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <h1>Vytvorenie novej todo položky</h1>
 
+    {{--Form for creating new todo item--}}
     <form method="POST" class="todo-create" action="{{route('todos.store')}}" class="col-12">
         @csrf
         <label for="title">Názov</label> <br>
