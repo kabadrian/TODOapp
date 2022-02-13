@@ -173,9 +173,19 @@ class ToDoItemController extends Controller
      * @param  \App\Models\ToDoItem  $toDoItem
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ToDoItem $toDoItem)
+    public function destroy($toDoItemID)
     {
-        //
+        $todo = ToDoItem::find($toDoItemID);
+
+        if(!$todo){
+            abort(403);
+        }
+
+        $todo->delete();
+
+        return redirect()->route('todos.index');
+
+
     }
 
     public function completed($todoID){
